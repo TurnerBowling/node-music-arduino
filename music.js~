@@ -1,0 +1,30 @@
+var arduino = require ('duino');
+var board = new arduino.Board({
+	debug: false
+});
+
+var piezo = new arduino.Piezo({
+	board: board,
+	pin: 11
+});
+
+var player = function(noteArray, callback) {
+	var thisNoteArray = noteArray;
+	var note = noteArray.shift();	
+	if(note) {
+		console.log(note);
+		var now = new Date(); var jsonDate = now.toJSON();
+		console.log(jsonDate);
+		piezo.note(note.n, note.d);
+		setTimeout(player(thisNoteArray), (note.d + 500));
+} else {
+	console.log("It's over");
+}}
+
+	
+var stop = function() {
+	piezo.tone(0, 10);
+}
+
+exports.player = player;
+exports.stop = stop;
